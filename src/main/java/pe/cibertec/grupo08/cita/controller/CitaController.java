@@ -16,7 +16,7 @@ import pe.cibertec.grupo08.cita.service.CitaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/citas")
+@RequestMapping("/api/v1/cita")
 @Validated
 @RequiredArgsConstructor
 public class CitaController {
