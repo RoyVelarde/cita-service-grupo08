@@ -1,6 +1,7 @@
 package pe.cibertec.grupo08.cita.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,21 +54,52 @@ public class Cita {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public Cita(Long pacienteId, Long medicoId, LocalDateTime fechaHora, ModalidadCita modalidad, String motivo) {
+        this.pacienteId = pacienteId;
+        this.medicoId = medicoId;
+        this.fechaHora = fechaHora;
+        this.modalidad = modalidad;
+        this.motivo = motivo;
+        this.estado = EstadoCita.PENDIENTE;
+        this.createdAt = LocalDateTime.now();
+    }
+
     @PreUpdate
     protected void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
     public void reprogramar(LocalDateTime nuevaFechaHora) {
+        if (nuevaFechaHora == null || !nuevaFechaHora.isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("La nueva fecha y hora deben estar en el futuro");
+        }
+        if (estado == EstadoCita.ATENDIDA || estado == EstadoCita.CANCELADA) {
+            throw new IllegalStateException("No se puede reprogramar una cita atendida o cancelada");
+        }
         this.fechaHora = nuevaFechaHora;
     }
 
-    public void cambiarModalidad(ModalidadCita modalidad) {
-        this.modalidad = modalidad;
+    public void cambiarModalidad(ModalidadCita nuevaModalidad) {
+        if (nuevaModalidad == null) {
+            throw new IllegalArgumentException("La modalidad es obligatoria");
+        }
+        if (estado == EstadoCita.ATENDIDA || estado == EstadoCita.CANCELADA) {
+            throw new IllegalStateException("No se puede cambiar la modalidad de una cita atendida o cancelada");
+        }
+        this.modalidad = nuevaModalidad;
     }
 
-    public void cambiarMotivo(String motivo) {
-        this.motivo = motivo;
+    public void cambiarMotivo(String nuevoMotivo) {
+        if (nuevoMotivo == null || nuevoMotivo.isBlank()) {
+            throw new IllegalArgumentException("El motivo es obligatorio");
+        }
+        if (nuevoMotivo.length() > 300) {
+            throw new IllegalArgumentException("El motivo no puede superar los 300 caracteres");
+        }
+        if (estado == EstadoCita.ATENDIDA || estado == EstadoCita.CANCELADA) {
+            throw new IllegalStateException("No se puede modificar una cita atendida o cancelada");
+        }
+        this.motivo = nuevoMotivo;
     }
 
     public void confirmar() {
@@ -81,7 +113,6 @@ public class Cita {
         if (this.estado == EstadoCita.ATENDIDA || this.estado == EstadoCita.CANCELADA) {
             throw new IllegalStateException("No se puede cancelar una cita atendida o cancelada");
         }
-
         this.estado = EstadoCita.CANCELADA;
     }
 
