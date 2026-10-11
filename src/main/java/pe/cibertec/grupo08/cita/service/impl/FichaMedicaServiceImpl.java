@@ -64,8 +64,8 @@ public class FichaMedicaServiceImpl implements FichaMedicaService {
     @Transactional(readOnly = true)
     @Override
     public FichaMedicaResponse buscarPorId(Long id) {
-        FichaMedicaConsolidada ficha = fichaRepository
-                .findById(id).orElseThrow(() ->
+        FichaMedicaConsolidada ficha = fichaRepository.findById(id)
+                .orElseThrow(() ->
                         new RecursoNoEncontradoException("No existe la ficha médica con ID " + id)
                 );
         return fichaMapper.toResponse(ficha);
@@ -83,8 +83,8 @@ public class FichaMedicaServiceImpl implements FichaMedicaService {
     @Transactional
     @Override
     public FichaMedicaResponse anular(Long id) {
-        FichaMedicaConsolidada ficha = fichaRepository
-                .findById(id).orElseThrow(() ->
+        FichaMedicaConsolidada ficha = fichaRepository.findById(id)
+                .orElseThrow(() ->
                         new RecursoNoEncontradoException("No existe la ficha médica con ID " + id)
                 );
         ficha.anular();
@@ -94,16 +94,14 @@ public class FichaMedicaServiceImpl implements FichaMedicaService {
     @Transactional(readOnly = true)
     @Override
     public byte[] generarPdf(Long id) {
-        FichaMedicaConsolidada ficha = fichaRepository
-                .findById(id).orElseThrow(() ->
+        FichaMedicaConsolidada ficha = fichaRepository.findById(id)
+                .orElseThrow(() ->
                         new RecursoNoEncontradoException("No existe la ficha médica con ID " + id)
                 );
-
         if (ficha.getEstado() != EstadoFicha.GENERADA) {
             throw new ConflictoCitaException("No se puede descargar una ficha anulada");
         }
-        List<DetalleConsultaFichaResponse> consultas = consultaRepository
-                .findByCitaPacienteId(ficha.getPacienteId())
+        List<DetalleConsultaFichaResponse> consultas = consultaRepository.findByCitaPacienteId(ficha.getPacienteId())
                 .stream()
                 .map(consulta ->
                         new DetalleConsultaFichaResponse(

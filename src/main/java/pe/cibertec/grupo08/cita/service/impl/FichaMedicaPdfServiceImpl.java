@@ -25,7 +25,7 @@ public class FichaMedicaPdfServiceImpl implements FichaMedicaPdfService {
             document.add(new Paragraph("Ficha ID: " + ficha.fichaId()));
             document.add(new Paragraph("Paciente ID: " + ficha.pacienteId()));
             document.add(new Paragraph("Profesional generador ID: " + ficha.profesionalGeneradorId()));
-            document.add(new Paragraph("Fecha de generacion: " + ficha.fechaGeneracion()));
+            document.add(new Paragraph("Fecha de generación: " + ficha.fechaGeneracion()));
             document.add(new Paragraph(" "));
             document.add(new Paragraph("HISTORIAL DE CONSULTAS"));
             document.add(new Paragraph(" "));
@@ -33,9 +33,12 @@ public class FichaMedicaPdfServiceImpl implements FichaMedicaPdfService {
                 document.add(new Paragraph("Consulta ID: " + consulta.consultaId()));
                 document.add(new Paragraph("Cita ID: " + consulta.citaId()));
                 document.add(new Paragraph("Profesional ID: " + consulta.profesionalId()));
-                document.add(new Paragraph("Fecha de atencion: " + consulta.fechaAtencion()));
+                document.add(new Paragraph("Fecha de atención: " + consulta.fechaAtencion()));
                 document.add(new Paragraph("Diagnostico: " + consulta.diagnostico()));
-                document.add(new Paragraph("Observaciones: " + (consulta.observaciones() == null ? "Sin observaciones" : consulta.observaciones())));
+                document.add(new Paragraph(
+                        "Observaciones: " + (consulta.observaciones() == null
+                                ? "Sin observaciones" : consulta.observaciones()))
+                );
                 document.add(new Paragraph(" "));
             }
             document.close();

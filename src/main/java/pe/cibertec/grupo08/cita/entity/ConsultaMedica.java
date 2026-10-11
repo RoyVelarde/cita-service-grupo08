@@ -59,9 +59,4 @@ public class ConsultaMedica {
             createdAt = LocalDateTime.now();
         }
     }
-
-    public void actualizarDatos(String nuevoDiagnostico, String nuevasObservaciones) {
-        this.diagnostico = nuevoDiagnostico;
-        this.observaciones = nuevasObservaciones;
-    }
 }

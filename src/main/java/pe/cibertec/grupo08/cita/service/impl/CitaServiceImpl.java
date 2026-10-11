@@ -124,8 +124,9 @@ public class CitaServiceImpl implements CitaService {
     }
 
     private Cita obtenerEntidad(Long id) {
-        return citaRepository.findById(id).orElseThrow(
-                () -> new RecursoNoEncontradoException("No existe una cita con ID " + id)
-        );
+        return citaRepository.findById(id)
+                .orElseThrow(
+                        () -> new RecursoNoEncontradoException("No existe una cita con ID " + id)
+                );
     }
 }
