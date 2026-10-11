@@ -1,0 +1,21 @@
+services:
+  postgres-cita:
+    image: postgres:17
+    container_name: postgres-cita
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cita_db
+      POSTGRES_USER: cita_user
+      POSTGRES_PASSWORD: ${CITA_DB_PASSWORD:?Define CITA_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - cita_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cita_user -d cita_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  cita_data:
