@@ -37,4 +37,31 @@ public class ConsultaMedica {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public ConsultaMedica(
+            Cita cita,
+            LocalDateTime fechaAtencion,
+            String diagnostico,
+            String observaciones,
+            Long profesionalId
+    ) {
+        this.cita = cita;
+        this.fechaAtencion = fechaAtencion;
+        this.diagnostico = diagnostico;
+        this.observaciones = observaciones;
+        this.profesionalId = profesionalId;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    protected void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+
+    public void actualizarDatos(String nuevoDiagnostico, String nuevasObservaciones) {
+        this.diagnostico = nuevoDiagnostico;
+        this.observaciones = nuevasObservaciones;
+    }
 }
